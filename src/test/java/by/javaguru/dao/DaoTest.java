@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class DaoTest {
@@ -176,6 +177,26 @@ public class DaoTest {
             courseDao.delete(course);
             studentDao.delete(student);
         }
+
+        @Test
+        void removeStudentsWithGradeBelow6() {
+            Optional<Course> course = courseDao.findById(3L);
+            assertNotEquals(Optional.empty(), course);
+
+            Course javaEnterpriseCourse = course.get();
+
+            Student studentWithLowGrade = studentDao.findById(4L).get();
+            assertNotNull(studentWithLowGrade);
+
+            studentDao.deleteWithGradeBelow(javaEnterpriseCourse, 6.0);
+            Optional<Student> deletedStudent = studentDao.findById(studentWithLowGrade.getId());
+
+            assertEquals(Optional.empty(), deletedStudent);
+        }
+    }
+
+    @Test
+    void test() {
     }
 
     @Nested

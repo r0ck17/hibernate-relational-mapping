@@ -1,5 +1,6 @@
 package by.javaguru.dao;
 
+import by.javaguru.entity.Course;
 import by.javaguru.entity.Student;
 import by.javaguru.exception.DaoException;
 import by.javaguru.util.HibernateUtil;
@@ -74,6 +75,21 @@ public class StudentDao implements Dao<Long, Student> {
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
             session.remove(student);
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    public void deleteWithGradeBelow(Course course, Double grade) {
+        try (Session session = sessionFactory.getCurrentSession()) {
+            session.beginTransaction();
+            session.refresh(course);
+            List<Student> students = course.getStudents();
+            students.removeIf(st -> st.getStudentProfile().getPerformance() < grade);
+
+            //session.merge(course);
+
             session.getTransaction().commit();
         } catch (HibernateException e) {
             throw new DaoException(e);

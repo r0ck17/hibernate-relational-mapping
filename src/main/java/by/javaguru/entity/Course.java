@@ -33,7 +33,7 @@ public class Course {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Student> students = new ArrayList<>();
 
     @ManyToMany (fetch = FetchType.EAGER)
