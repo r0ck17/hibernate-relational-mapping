@@ -1,6 +1,7 @@
 package by.javaguru.dao;
 
 import by.javaguru.entity.Course;
+import by.javaguru.entity.Student;
 import by.javaguru.exception.DaoException;
 import by.javaguru.util.HibernateUtil;
 import lombok.AccessLevel;
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CourseDao implements Dao <Long, Course> {
-    private static CourseDao INSTANCE = new CourseDao();
+    private static final CourseDao INSTANCE = new CourseDao();
     private SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
 
     @Override
@@ -47,7 +48,7 @@ public class CourseDao implements Dao <Long, Course> {
     public Course save(Course course) {
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            session.persist(course);
+            session.save(course);
             session.getTransaction().commit();
 
             return course;
@@ -73,6 +74,11 @@ public class CourseDao implements Dao <Long, Course> {
     public void delete(Course course) {
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
+            session.refresh(course);
+            for (Student student : course.getStudents()) {
+                student.setCourse(null);
+                session.merge(student);
+            }
             session.remove(course);
             session.getTransaction().commit();
         } catch (HibernateException e) {

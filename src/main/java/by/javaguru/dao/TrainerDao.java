@@ -1,5 +1,6 @@
 package by.javaguru.dao;
 
+import by.javaguru.entity.Course;
 import by.javaguru.entity.Trainer;
 import by.javaguru.exception.DaoException;
 import by.javaguru.util.HibernateUtil;
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TrainerDao implements Dao<Long, Trainer> {
-    private static TrainerDao INSTANCE = new TrainerDao();
+    private static final TrainerDao INSTANCE = new TrainerDao();
     private SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
 
     @Override
@@ -73,6 +74,12 @@ public class TrainerDao implements Dao<Long, Trainer> {
     public void delete(Trainer trainer) {
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
+            session.refresh(trainer);
+
+            for (Course cours : trainer.getCourses()) {
+                cours.getTrainers().removeIf(trainer::equals);
+            }
+
             session.remove(trainer);
             session.getTransaction().commit();
         } catch (HibernateException e) {

@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StudentDao implements Dao<Long, Student> {
-    private static StudentDao INSTANCE = new StudentDao();
+    private static final StudentDao INSTANCE = new StudentDao();
     private SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
 
     @Override
