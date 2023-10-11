@@ -46,7 +46,7 @@ public class Student {
     @Column(name = "education_type", nullable = false)
     private EducationType educationType;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
 }

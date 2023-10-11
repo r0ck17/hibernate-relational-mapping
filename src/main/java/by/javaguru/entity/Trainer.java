@@ -2,6 +2,7 @@ package by.javaguru.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,6 +38,6 @@ public class Trainer {
     private String surname;
 
     @Builder.Default
-    @ManyToMany(mappedBy = "trainers")
+    @ManyToMany(mappedBy = "trainers", fetch = FetchType.EAGER)
     private List<Course> courses = new ArrayList<>();
 }
