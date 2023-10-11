@@ -15,7 +15,7 @@ import org.hibernate.cfg.Configuration;
 public class HibernateUtil {
     private static SessionFactory sessionFactory;
 
-    public static SessionFactory getSessionFactory() {
+    public static SessionFactory buildSessionFactory() {
         if (sessionFactory == null) {
             log.info("Configure session factory");
             sessionFactory = new Configuration()
